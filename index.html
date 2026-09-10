@@ -34,16 +34,18 @@ input,select{font:inherit;color:inherit}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
 .app{height:100dvh;display:flex;flex-direction:column;background:var(--paper);container-type:inline-size;overflow:hidden}
-.hdr{flex:none;background:var(--panel);border-bottom:1px solid var(--line);padding:13px max(18px,calc((100% - 1060px)/2));display:flex;align-items:center;gap:14px;min-height:58px}
+.hdr{flex:none;background:var(--panel);border-bottom:1px solid var(--line);padding:13px 20px;display:flex;align-items:center;gap:14px;min-height:58px}
 .hdr.judge{box-shadow:inset 0 2px 0 var(--accent)}
 .hdr-back{border:0;background:none;padding:6px;margin-inline-start:-8px;display:flex;flex:none;border-radius:8px;color:var(--ink2)}
 .hdr-t{flex:1;min-width:0}
 .hdr-t b{display:block;font-family:var(--display);font-weight:600;font-size:16px;line-height:1.3;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hdr-sub{display:block;font-size:12px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hdr-act{border:1px solid var(--line2);background:none;border-radius:999px;padding:6px 13px;font-size:12px;font-weight:500;flex:none;color:var(--ink2)}
+.hdr-act{border:1px solid var(--line2);background:none;border-radius:999px;padding:6px 13px;font-size:12px;font-weight:500;flex:none;color:var(--ink2);white-space:nowrap}
+.hdr-act.cta{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600;font-size:12.5px;padding:8px 16px;display:inline-flex;align-items:center;gap:6px}
+.hdr-act.cta:active{filter:brightness(.93)}
 .body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
-.pad{padding:20px max(18px,calc((100% - 1060px)/2))}
-.foot{flex:none;background:var(--panel);border-top:1px solid var(--line);padding:12px max(18px,calc((100% - 1060px)/2)) calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px}
+.pad{padding:20px;max-width:1100px;margin-inline:auto}
+.foot{flex:none;background:var(--panel);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px}
 
 .btn{flex:1;border:1px solid var(--line2);border-radius:var(--r-sm);padding:13px 16px;font-family:var(--display);font-weight:600;font-size:14.5px;min-height:48px;background:var(--panel);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.005em}
 .btn.primary{background:var(--ink);border-color:var(--ink);color:var(--paper)}
@@ -65,7 +67,9 @@ input,select{font:inherit;color:inherit}
 .tiny{font-size:12px;color:var(--ink2);line-height:1.6}
 .center{text-align:center}
 
-.hero{padding:36px max(18px,calc((100% - 1060px)/2)) 28px;border-bottom:1px solid var(--line);background:var(--panel)}
+.hero{padding:36px 20px 28px;border-bottom:1px solid var(--line);background:var(--panel)}
+.hero>*{max-width:1100px;margin-inline:auto}
+@container (min-width:1160px){.hdr,.foot,.hero{padding-inline:calc((100cqw - 1100px)/2)}}
 .hero .meet{font-family:var(--display);font-weight:600;font-size:27px;line-height:1.18;letter-spacing:-.02em;text-wrap:balance;margin:12px 0 6px}
 .hero .when{font-size:13px;color:var(--ink2)}
 .rolecard{width:100%;text-align:start;border:1px solid var(--line);background:var(--panel);border-radius:var(--r);padding:18px;display:flex;gap:15px;align-items:center}
@@ -171,6 +175,11 @@ tr.q td:first-child{box-shadow:inset 2px 0 0 var(--good)}
 .kv span{color:var(--ink2)}
 .kv b{font-family:var(--mono);font-weight:500}
 
+.filebox{border:1px dashed var(--line2);border-radius:var(--r);padding:20px 16px;text-align:center;background:var(--panel3)}
+.filebox input[type=file]{display:block;margin:12px auto 0;font-size:12.5px;max-width:100%}
+textarea.paste{width:100%;min-height:130px;border:1px solid var(--line2);background:var(--panel);border-radius:10px;padding:11px 12px;font-family:var(--mono);font-size:13px;line-height:1.65;resize:vertical}
+textarea.paste:focus{border-color:var(--ink);outline:none}
+.prev{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px}
 .signs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
 @media (max-width:540px){.signs{grid-template-columns:1fr;gap:2px}}
 .sign{display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 4px 4px}
@@ -214,6 +223,7 @@ tr.q td:first-child{box-shadow:inset 2px 0 0 var(--good)}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="./firebase-config.js"></script>
 <div class="app" id="app">
   <div class="hdr"><div class="hdr-t"><b>ผลกรีฑาภาคสนาม</b><span class="hdr-sub">กำลังเชื่อมต่อฐานข้อมูล…</span></div></div>
@@ -266,7 +276,7 @@ function standings(ev){
 const fmt=v=>(v==null||v===0)?'–':v.toFixed(2);
 
 /* ===================== สถานะ ===================== */
-const S={screen:'boot', role:null, evId:null, athIdx:0, attIdx:0, mode:'edm', pin:'', draft:{}, judge:'', addFrom:'roster', editing:null};
+const S={screen:'boot', role:null, evId:null, athIdx:0, attIdx:0, mode:'edm', pin:'', draft:{}, judge:'', addFrom:'roster', editing:null, importRows:[], importText:''};
 const DATA={meet:{name:'ผลกรีฑาภาคสนาม',where:'',date:''}, config:{pin:'1234',judges:[]}, events:[], ready:false, db:null, dbError:false};
 const app=document.getElementById('app');
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -277,6 +287,8 @@ const ICON={
   arw:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
   judge:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M12 4v10"/><path d="M7 8l5-4 5 4"/><rect x="8" y="14" width="8" height="4" rx="1"/></svg>',
   eye:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg>',
+  upload:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5-5 5 5"/><path d="M12 5v13"/></svg>',
+  copy:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
   print:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 15h12v6H6z"/></svg>',
   plus:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   edit:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>'
@@ -403,6 +415,7 @@ function scEvents(){
   return `${hdr('รายการแข่งขัน', S.judge||'กรรมการภาคสนาม','home','<button class="hdr-act" data-act="logout">ออก</button>')}
   <div class="body"><div class="pad stack" style="gap:12px">
     ${DATA.events.length?DATA.events.map(e=>evCard(e,'data-ev')).join(''):'<div class="card center" style="padding:34px 20px"><b>ยังไม่มีรายการแข่งขัน</b><p class="tiny" style="margin:6px 0 0">กดปุ่มด้านล่างเพื่อสร้างรายการแรก</p></div>'}
+    ${DATA.events.length?'<p class="tiny" style="margin:4px 4px 0">อยากแยกรุ่นหรือเพศของกีฬาเดิม? เปิดรายการนั้น → ตั้งค่ารายการนี้ → สร้างสำเนา</p>':''}
   </div></div>
   <div class="foot">
     <button class="btn line" style="flex:0 0 46%" data-go="settings-meet">ตั้งค่าการแข่งขัน</button>
@@ -412,7 +425,7 @@ function scEvents(){
 function scRoster(){
   const e=ev(); if(!e) return scEvents();
   const st=standings(e);
-  return `${hdr(e.name,`${e.cat||''}${e.field?' · '+e.field:''}`,'events','<button class="hdr-act" data-go="summary">สรุปผล</button>')}
+  return `${hdr(e.name,`${e.cat||''}${e.field?' · '+e.field:''}`,'events','<button class="hdr-act cta" data-go="summary">สรุปผลการแข่งขัน</button>')}
   <div class="body"><div class="pad stack" style="gap:10px">
     <div class="card" style="padding:12px 15px;display:flex;gap:18px;flex-wrap:wrap;align-items:center">
       <div><div class="tiny">ระยะกล้องถึงจุดศูนย์กลาง</div><b class="num" style="font-size:15px">${(+e.station.dist).toFixed(4)} m.</b></div>
@@ -429,8 +442,8 @@ function scRoster(){
     }).join('')||'<div class="card center" style="padding:30px"><b>ยังไม่มีนักกีฬา</b><p class="tiny" style="margin:6px 0 0">กดเพิ่มผู้แข่งขันด้านล่าง</p></div>'}
   </div></div>
   <div class="foot">
-    <button class="btn line" style="flex:0 0 46%" data-act="addath">${ICON.plus} เพิ่มผู้แข่งขัน</button>
-    <button class="btn primary" data-go="summary">ดูสรุปผล</button>
+    <button class="btn line" style="flex:0 0 48%" data-act="addath">${ICON.plus} เพิ่มผู้แข่งขัน</button>
+    <button class="btn line" data-go="import">${ICON.upload} นำเข้ารายชื่อจากไฟล์</button>
   </div>`;
 }
 function scRecord(){
@@ -451,7 +464,7 @@ function scRecord(){
   }).join('');
   const opts=e.athletes.map((x,k)=>`<option value="${k}"${k===S.athIdx?' selected':''}>${esc(x.no)} — ${esc(x.name)}</option>`).join('');
   const done=(a.attempts||[]).filter(Boolean).length;
-  return `${hdr('บันทึกผลการแข่งขัน',`${e.name}${e.field?' · '+e.field:''}`,'roster','<button class="hdr-act" data-go="summary">สรุปผล</button>')}
+  return `${hdr('บันทึกผลการแข่งขัน',`${e.name}${e.field?' · '+e.field:''}`,'roster','<button class="hdr-act cta" data-go="summary">สรุปผลการแข่งขัน</button>')}
   <div class="body"><div class="pad stack" style="gap:13px;max-width:700px">
     <div class="card" style="padding:13px 15px">
       <div class="step"><span class="n">1</span><span class="eyebrow">เลือกผู้แข่งขัน</span>
@@ -567,7 +580,12 @@ function scEventForm(){
       <div class="f txt" style="margin-top:12px"><label for="evJudge">กรรมการผู้บันทึกผล</label><input id="evJudge" value="${esc(e?e.judge||'':S.judge)}"></div>
       <p class="tiny" style="margin:11px 0 0">ตั้งกล้องให้เป็นระนาบเดียวกับแนวกระดานเหยียบ/วงทุ่ม · เส้นผ่านศูนย์กลางวงใช้เฉพาะประเภททุ่ม–ขว้าง</p>
     </div>
-    ${e?`<button class="btn danger" data-act="delev">ลบรายการนี้ทั้งหมด</button>`:''}
+    ${e?`<div class="card" style="padding:15px">
+      <div class="eyebrow" style="margin-bottom:7px">แยกรุ่น / เพศ</div>
+      <p class="tiny" style="margin:0 0 11px">สร้างรายการใหม่ที่ใช้วิธีคำนวณและค่ากล้องชุดเดียวกับรายการนี้ แต่รายชื่อนักกีฬาว่าง เหมาะกับการแยก ชาย/หญิง หรือแยกรุ่นอายุ</p>
+      <button class="btn line" data-act="dupev">${ICON.copy} สร้างสำเนารายการนี้</button>
+    </div>
+    <button class="btn danger" data-act="delev">ลบรายการนี้ทั้งหมด</button>`:''}
   </div></div>
   <div class="foot"><button class="btn primary" data-act="${e?'evsave':'evcreate'}">${e?'บันทึกการตั้งค่า':'สร้างรายการ'}</button></div>`;
 }
@@ -667,10 +685,11 @@ function fieldMap(e,st){
       <text x="${cx-pitW/2-7}" y="${base-m*sc+3.5}" font-size="9.5" ${F} fill="var(--ink2)" text-anchor="end">${m}</text>`).join('');
     const pts=st.rows.map(r=>{const v=r.final!=null?r.final:r.qual; if(!v) return '';
       const yy=base-v*sc, xx=cx+((r.i%4)-1.5)*22, top=r.rank&&r.rank<=3;
-      return `<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${top?4.6:3.4}" fill="${top?'var(--accent)':'var(--ink3)'}" opacity="${top?1:.5}"/>`}).join('');
+      const tag = top ? `<text x="${xx.toFixed(1)}" y="${(yy-8.5).toFixed(1)}" font-size="8.5" ${F} fill="var(--accent)" text-anchor="middle" font-weight="500">${esc(r.a.no)}</text>` : '';
+      return `<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${top?4.6:3.4}" fill="${top?'var(--accent)':'var(--ink3)'}" opacity="${top?1:.5}"/>${tag}`}).join('');
     const w=st.byRank[0];
     const lab=w?`<line x1="${cx+pitW/2}" y1="${base-w.final*sc}" x2="${cx+pitW/2+8}" y2="${base-w.final*sc}" stroke="var(--accent)"/>
-      <text x="${cx+pitW/2+11}" y="${base-w.final*sc+3.5}" font-size="10.5" ${F} fill="var(--accent)">${w.final.toFixed(2)}</text>`:'';
+      <text x="${cx+pitW/2+11}" y="${base-w.final*sc+3.5}" font-size="10.5" ${F} fill="var(--accent)" font-weight="500">${w.final.toFixed(2)}</text>`:'';
     return `<svg viewBox="0 0 ${W} ${H}" ${SV} role="img" aria-label="ผังบ่อทรายและจุดตก">
       <rect x="${cx-pitW/2}" y="${Math.max(6,base-9*sc)}" width="${pitW}" height="${base-Math.max(6,base-9*sc)}" fill="var(--panel3)" stroke="var(--line2)"/>
       ${tk}${pts}${lab}
@@ -688,15 +707,136 @@ function fieldMap(e,st){
       <text x="${(ax-5).toFixed(1)}" y="${(ay+3.5).toFixed(1)}" font-size="9.5" ${F} fill="var(--ink2)" text-anchor="end">${m}</text>`}).join('');
   const pts=st.rows.map(r=>{const v=r.final!=null?r.final:r.qual; if(!v) return '';
     const [xx,yy]=pt(((r.i*7)%26)-13, v+(+e.station.dia||0)/2), top=r.rank&&r.rank<=3;
-    return `<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${top?4.6:3.4}" fill="${top?'var(--accent)':'var(--ink3)'}" opacity="${top?1:.5}"/>`}).join('');
+    const tx=Math.min(Math.max(xx,16),W-16);
+    const tag = top ? `<text x="${tx.toFixed(1)}" y="${(yy-8.5).toFixed(1)}" font-size="8.5" ${F} fill="var(--accent)" text-anchor="middle" font-weight="500">${esc(r.a.no)}</text>` : '';
+    return `<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="${top?4.6:3.4}" fill="${top?'var(--accent)':'var(--ink3)'}" opacity="${top?1:.5}"/>${tag}`}).join('');
   const w=st.byRank[0];
   const lab=w?(()=>{const [wx,wy]=pt(((w.i*7)%26)-13, w.final+(+e.station.dia||0)/2);
-    return `<text x="${Math.min(wx+8,W-4).toFixed(1)}" y="${(wy-7).toFixed(1)}" font-size="10.5" ${F} fill="var(--accent)" text-anchor="${wx>W/2?'end':'start'}">${w.final.toFixed(2)}</text>`})():'';
+    return `<text x="${Math.min(Math.max(wx,20),W-20).toFixed(1)}" y="${(wy+13).toFixed(1)}" font-size="10.5" ${F} fill="var(--accent)" text-anchor="middle" font-weight="500">${w.final.toFixed(2)}</text>`})():'';
   return `<svg viewBox="0 0 ${W} ${H}" ${SV} role="img" aria-label="ผังเซกเตอร์และจุดตก">
     <polygon points="${cx},${base} ${lx.toFixed(1)},${ly.toFixed(1)} ${rx.toFixed(1)},${ry.toFixed(1)}" fill="var(--panel3)" stroke="var(--line2)"/>
     ${ar}${pts}${lab}
     <circle cx="${cx}" cy="${base}" r="${((+e.station.dia||0)/2*sc).toFixed(1)}" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
     <text x="${cx}" y="${H-6}" font-size="9.5" font-family="IBM Plex Sans Thai,sans-serif" fill="var(--ink2)" text-anchor="middle">วงทุ่ม Ø ${(+e.station.dia||0).toFixed(2)} m.</text></svg>`;
+}
+function scImport(){
+  const e=ev(); if(!e) return scEvents();
+  const rows=S.importRows||[];
+  return `${hdr('นำเข้ารายชื่อนักกีฬา',`${e.name}${e.cat?' · '+e.cat:''}`,'roster')}
+  <div class="body"><div class="pad stack" style="gap:14px;max-width:660px">
+    <div class="card" style="padding:15px">
+      <div class="step"><span class="n">1</span><span class="eyebrow">เลือกไฟล์ Excel หรือ CSV</span></div>
+      <div class="filebox" style="margin-top:11px">
+        <b style="font-family:var(--display);font-size:14.5px">กดเลือกไฟล์รายชื่อ</b>
+        <p class="tiny" style="margin:5px 0 0">รองรับ .xlsx .xls .csv</p>
+        <input type="file" id="impFile" accept=".xlsx,.xls,.csv">
+      </div>
+      <p class="tiny" style="margin:11px 0 0">ระบบอ่านคอลัมน์เรียงจากซ้าย: <b>หมายเลข</b> · <b>ชื่อ–สกุล</b> · <b>สังกัด</b><br>ไม่มีหมายเลขก็ได้ ระบบออกเลขให้เอง · มีแถวหัวตารางได้ ระบบข้ามให้เอง</p>
+      <button class="mini" data-act="tpl" style="margin-top:11px">ดาวน์โหลดไฟล์ตัวอย่าง</button>
+    </div>
+
+    <div class="card" style="padding:15px">
+      <div class="step"><span class="n">2</span><span class="eyebrow">หรือพิมพ์ / วางรายชื่อเอง</span></div>
+      <p class="tiny" style="margin:9px 0 9px">บรรทัดละคน คั่นด้วยจุลภาคหรือแท็บ</p>
+      <textarea class="paste" id="impPaste" placeholder="D1042, สมชาย ใจดี, โรงเรียนกีฬาเทศบาล&#10;D2317, ปิยะพงษ์ ศรีสุข, โรงเรียนสาธิตวิทยา">${esc(S.importText||'')}</textarea>
+      <button class="btn line" data-act="parsePaste" style="margin-top:11px">อ่านรายชื่อจากข้อความนี้</button>
+    </div>
+
+    ${rows.length?`<div class="card" style="padding:15px">
+      <div class="step"><span class="n">3</span><span class="eyebrow">ตรวจก่อนนำเข้า — พบ ${rows.length} คน</span>
+        <button class="mini" data-act="clearimp" style="margin-inline-start:auto">ล้าง</button></div>
+      <div class="prev" style="margin-top:11px"><table><thead><tr><th>ลำดับ</th><th class="name">หมายเลข</th><th class="name">ชื่อ–สกุล</th><th class="name">สังกัด</th></tr></thead><tbody>
+        ${rows.map((r,i)=>`<tr><td class="v">${i+1}</td><td class="name num">${esc(r.no||'— ออกให้ —')}</td><td class="name"><b>${esc(r.name)}</b></td><td class="name">${esc(r.team||'—')}</td></tr>`).join('')}
+      </tbody></table></div>
+    </div>`:''}
+  </div></div>
+  <div class="foot">
+    <button class="btn line" style="flex:0 0 34%" data-go="roster">ยกเลิก</button>
+    <button class="btn primary" data-act="doimport" ${rows.length?'':'disabled'}>นำเข้า ${rows.length?rows.length+' คน':''}</button>
+  </div>`;
+}
+function normRows(aoa){
+  const out=[];
+  aoa.forEach((r,idx)=>{
+    if(!Array.isArray(r)) return;
+    const c=r.map(x=>String(x==null?'':x).trim());
+    while(c.length && !c[c.length-1]) c.pop();
+    if(!c.length) return;
+    if(idx===0 && /ชื่อ|name|หมายเลข|bib|สังกัด|team|ลำดับ/i.test(c.join(' '))) return;
+    let no='',name='',team='';
+    if(c.length===1){ name=c[0]; }
+    else if(c.length===2){ no=c[0]; name=c[1]; }
+    else { no=c[0]; name=c[1]; team=c[2]; }
+    if(!name) return;
+    out.push({no,name,team});
+  });
+  return out;
+}
+function readImportFile(file){
+  const fr=new FileReader();
+  fr.onload=ev2=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(ev2.target.result),{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const aoa=XLSX.utils.sheet_to_json(ws,{header:1,blankrows:false,defval:''});
+      S.importRows=normRows(aoa);
+      if(!S.importRows.length) toast('ไม่พบรายชื่อในไฟล์นี้ ลองตรวจว่าคอลัมน์ชื่ออยู่ลำดับที่ 2');
+      else toast('อ่านได้ '+S.importRows.length+' คน');
+    }catch(err){ console.error(err); toast('อ่านไฟล์ไม่สำเร็จ ลองบันทึกเป็น .xlsx หรือ .csv อีกครั้ง'); }
+    go('import');
+  };
+  fr.onerror=()=>toast('เปิดไฟล์ไม่สำเร็จ');
+  fr.readAsArrayBuffer(file);
+}
+function parsePasted(){
+  const t=(document.getElementById('impPaste')||{}).value||'';
+  S.importText=t;
+  const aoa=t.split(/\r?\n/).map(line=>line.split(/\t|,|;/));
+  S.importRows=normRows(aoa);
+  toast(S.importRows.length?('อ่านได้ '+S.importRows.length+' คน'):'ยังไม่พบรายชื่อ');
+  go('import');
+}
+async function doImport(){
+  const e=ev(), rows=S.importRows||[];
+  if(!rows.length) return;
+  if(!DATA.db) return toast('ยังไม่ได้เชื่อมฐานข้อมูล');
+  let order=(e.athletes.length?Math.max(...e.athletes.map(x=>x.order||0)):0);
+  const used=new Set(e.athletes.map(x=>x.no));
+  const batch=DATA.db.batch();
+  let n=0, skipped=0, base=Date.now().toString(36);
+  rows.forEach((r,i)=>{
+    let no=r.no||('A'+(1000+order+1));
+    if(used.has(no)){ skipped++; return; }
+    used.add(no); order++;
+    batch.set(DATA.db.doc('events/'+e.id+'/athletes/a'+base+i.toString(36)),
+      {order, no, name:r.name, team:r.team||'', attempts:new Array(e.rounds||6).fill(null), updatedAt:stamp(), updatedBy:S.judge});
+    n++;
+  });
+  if(!n) return toast('หมายเลขซ้ำกับที่มีอยู่ทั้งหมด ไม่มีอะไรให้นำเข้า');
+  try{ await batch.commit(); }catch(err){ console.error(err); return toast('นำเข้าไม่สำเร็จ ลองอีกครั้ง'); }
+  S.importRows=[]; S.importText='';
+  toast('นำเข้า '+n+' คนแล้ว'+(skipped?' (ข้ามหมายเลขซ้ำ '+skipped+' คน)':''));
+  go('roster');
+}
+async function dupEvent(){
+  const e=ev();
+  const id='e'+Date.now().toString(36);
+  const body={name:e.name, cat:'', type:e.type, field:e.field||'', judge:e.judge||'',
+    rounds:e.rounds||6, qualify:e.qualify||8,
+    station:{dist:+e.station.dist||0, dia:+e.station.dia||0},
+    order:(DATA.events.length?Math.max(...DATA.events.map(x=>x.order||0)):0)+1, updatedAt:stamp()};
+  if(!await save('events/'+id, body)) return;
+  S.evId=id; S.editing='event';
+  toast('สร้างสำเนาแล้ว — กรอกรุ่น/ประเภท แล้วกดบันทึก');
+  go('settings');
+}
+function downloadTemplate(){
+  const csv='﻿'+['หมายเลข,ชื่อ-สกุล,สังกัด','D1001,สมชาย ใจดี,โรงเรียนกีฬาเทศบาล','D1002,ปิยะพงษ์ ศรีสุข,โรงเรียนสาธิตวิทยา',''].join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const l=document.createElement('a'); l.href=url; l.download='ตัวอย่างรายชื่อนักกีฬา.csv';
+  document.body.appendChild(l); l.click(); l.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+  toast('ดาวน์โหลดไฟล์ตัวอย่างแล้ว');
 }
 function scViewerEvents(){
   return `${hdr(DATA.meet.name,[DATA.meet.where,DATA.meet.date].filter(Boolean).join(' · '),'home')}
@@ -709,7 +849,7 @@ function scViewerEvents(){
 function scViewerLive(){
   const e=ev(); if(!e) return scViewerEvents();
   const st=standings(e);
-  return `${hdr(e.name,e.cat||'','v-events','<button class="hdr-act" data-go="v-summary">ตารางเต็ม</button>')}
+  return `${hdr(e.name,e.cat||'','v-events','<button class="hdr-act cta" data-go="v-summary">สรุปผลการแข่งขัน</button>')}
   <div class="body"><div class="pad stack" style="gap:10px">
     <div style="display:flex;align-items:center;gap:8px">
       <span class="tiny">เรียงตามสถิติดีที่สุด</span>
@@ -727,7 +867,7 @@ function scViewerLive(){
 function render(){
   const map={boot:scBoot,home:scHome,login:scLogin,events:scEvents,roster:scRoster,record:scRecord,
     athform:scAthForm,evform:scEventForm,'settings':()=>{S.editing='event';return scEventForm()},
-    'settings-meet':scMeetForm,summary:()=>scSummary(false),
+    'settings-meet':scMeetForm,summary:()=>scSummary(false),import:scImport,
     'v-events':scViewerEvents,'v-live':scViewerLive,'v-summary':()=>scSummary(true)};
   try{ app.innerHTML=(map[S.screen]||scHome)(); }
   catch(err){ app.innerHTML=`${hdr('เกิดข้อผิดพลาด','','home')}<div class="body"><div class="pad"><div class="banner">${esc(err.message||err)}</div></div></div>`; }
@@ -772,6 +912,11 @@ app.addEventListener('click',async e=>{
   if(a==='addath'){ S.addFrom=S.screen;S.editing=null; return go('athform'); }
   if(a==='editath'){ S.addFrom=S.screen;S.editing='ath'; return go('athform'); }
   if(a==='addev'){ S.editing=null; return go('evform'); }
+  if(a==='dupev') return dupEvent();
+  if(a==='tpl') return downloadTemplate();
+  if(a==='parsePaste') return parsePasted();
+  if(a==='clearimp'){ S.importRows=[]; S.importText=''; return go('import'); }
+  if(a==='doimport') return doImport();
   if(a==='addsave'||a==='addmore') return addAthlete(a==='addmore');
   if(a==='editsave') return editAthlete();
   if(a==='delath') return delAthlete();
@@ -782,10 +927,16 @@ app.addEventListener('click',async e=>{
   if(a==='foul'||a==='unfoul'||a==='saveatt') return saveAttempt(a);
 });
 app.addEventListener('change',e=>{
+  if(e.target.id==='impFile'){
+    const f=e.target.files && e.target.files[0];
+    if(f) readImportFile(f);
+    return;
+  }
   if(e.target.id!=='athSel') return;
   S.athIdx=+e.target.value; S.attIdx=nextOpen(); go('record');
 });
 app.addEventListener('input',e=>{
+  if(e.target.id==='impPaste'){ S.importText=e.target.value; return; }
   if(!['fd','fm','fs','fdist','fval'].includes(e.target.id)) return;
   const g=id=>document.getElementById(id)?.value;
   const a=ath(), key=`${a.id}:${S.attIdx}`, e2=ev();
