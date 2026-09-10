@@ -110,6 +110,10 @@ input,select{font:inherit;color:inherit}
 .evcard .top span{font-size:13px;color:var(--ink2)}
 .evcard .meta{border-top:1px solid var(--line);padding:11px 18px;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink2)}
 .evcard .meta b{font-family:var(--mono);color:var(--ink);font-weight:500}
+.evwrap{position:relative}
+.evwrap .evcard .meta{padding-inline-end:60px}
+.evdel{position:absolute;inset-block-end:7px;inset-inline-end:10px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line2);background:var(--panel);border-radius:10px;color:var(--ink2)}
+.evdel:active{border-color:var(--bad);color:var(--bad)}
 
 .mini{border:1px solid var(--line2);background:none;border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:500;color:var(--ink2);white-space:nowrap;min-height:32px;display:inline-flex;align-items:center;gap:5px}
 .addrow{width:100%;border:1px dashed var(--line2);background:none;border-radius:var(--r);padding:14px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--ink2);font-weight:500;font-size:14px;min-height:56px}
@@ -236,6 +240,9 @@ const D2R=Math.PI/180, R2D=180/Math.PI;
 const dmsToDeg=(d,m,s)=>(+d||0)+(+m||0)/60+(+s||0)/3600;
 // กระโดดไกล  : ระยะ = ระยะยิง × sin(Hz)                    [Excel: G*SIN(F*PI()/180)]
 // ทุ่ม/ขว้าง : ระยะ = √(S² + ระยะยิง² − 2·S·ระยะยิง·cosHz) − Ø/2   [Excel: SQRT(E7^2+G^2-2*E7*G*COS(F))-E8/2]
+/* ประเภททุ่ม–ขว้าง ต้องมีระยะกล้อง→จุดศูนย์กลางวง (S) และเส้นผ่านศูนย์กลางวง (Ø)
+   ถ้า S = 0 สูตรกฎโคไซน์จะยุบเหลือ (ระยะยิง − Ø/2) ทำให้ผลผิดทุกค่า */
+const needStation = e => e && e.type!=='longjump';
 function computeAttempt(ev,hz,dist){
   if(ev.type==='longjump'){
     return {value:dist*Math.sin(hz*D2R), x:dist*Math.cos(hz*D2R), y:dist*Math.sin(hz*D2R)};
@@ -291,7 +298,8 @@ const ICON={
   copy:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
   print:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 15h12v6H6z"/></svg>',
   plus:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
-  edit:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>'
+  edit:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  trash:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>'
 };
 function toast(m){document.querySelector('.toast')?.remove();const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
 function go(sc,patch={}){Object.assign(S,{screen:sc},patch);render();document.querySelector('.body')?.scrollTo(0,0);}
@@ -398,10 +406,11 @@ function scLogin(){
     <p class="tiny center" style="margin:0">ทุกการบันทึกจะเก็บชื่อผู้บันทึกและเวลาไว้ในระบบ</p>
   </div></div>`;
 }
-function evCard(e,attr){
+function evCard(e,attr,canDel){
   const st=standings(e), done=st.rows.filter(r=>(r.a.attempts||[]).some(Boolean)).length;
   const lead=st.byRank[0];
-  return `<button class="evcard" ${attr}="${e.id}">
+  const bad=needStation(e)&&!(+e.station.dist>0);
+  const card=`<button class="evcard" ${attr}="${e.id}">
     <span class="top"><span style="flex:1"><b>${esc(e.name)}</b><span>${esc(e.cat||'')}</span></span>
       <span style="color:var(--ink3);margin-top:3px">${ICON.arw}</span></span>
     <span class="meta">
@@ -409,13 +418,18 @@ function evCard(e,attr){
       <span>บันทึกแล้ว <b>${done}</b></span>
       ${lead?`<span>นำอยู่ <b>${fmt(lead.final)}</b> m.</span>`:''}
       ${e.field?`<span>${esc(e.field)}</span>`:''}
+      ${canDel&&bad?`<span style="color:var(--bad)">⚠ ยังไม่ตั้งค่าระยะกล้อง</span>`:''}
     </span></button>`;
+  if(!canDel) return card;
+  return `<div class="evwrap">${card}
+    <button class="evdel" data-delev="${e.id}" aria-label="ลบรายการ ${esc(e.name)}" title="ลบรายการนี้">${ICON.trash}</button>
+  </div>`;
 }
 function scEvents(){
   return `${hdr('รายการแข่งขัน', S.judge||'กรรมการภาคสนาม','home','<button class="hdr-act" data-act="logout">ออก</button>')}
   <div class="body"><div class="pad stack" style="gap:12px">
-    ${DATA.events.length?DATA.events.map(e=>evCard(e,'data-ev')).join(''):'<div class="card center" style="padding:34px 20px"><b>ยังไม่มีรายการแข่งขัน</b><p class="tiny" style="margin:6px 0 0">กดปุ่มด้านล่างเพื่อสร้างรายการแรก</p></div>'}
-    ${DATA.events.length?'<p class="tiny" style="margin:4px 4px 0">อยากแยกรุ่นหรือเพศของกีฬาเดิม? เปิดรายการนั้น → ตั้งค่ารายการนี้ → สร้างสำเนา</p>':''}
+    ${DATA.events.length?DATA.events.map(e=>evCard(e,'data-ev',true)).join(''):'<div class="card center" style="padding:34px 20px"><b>ยังไม่มีรายการแข่งขัน</b><p class="tiny" style="margin:6px 0 0">กดปุ่มด้านล่างเพื่อสร้างรายการแรก</p></div>'}
+    ${DATA.events.length?'<p class="tiny" style="margin:4px 4px 0">อยากแยกรุ่นหรือเพศของกีฬาเดิม? เปิดรายการนั้น → ตั้งค่ารายการนี้ → สร้างสำเนา · ปุ่ม 🗑 ท้ายการ์ดใช้ลบรายการที่ไม่ต้องการ</p>':''}
   </div></div>
   <div class="foot">
     <button class="btn line" style="flex:0 0 46%" data-go="settings-meet">ตั้งค่าการแข่งขัน</button>
@@ -428,10 +442,11 @@ function scRoster(){
   return `${hdr(e.name,`${e.cat||''}${e.field?' · '+e.field:''}`,'events','<button class="hdr-act cta" data-go="summary">สรุปผลการแข่งขัน</button>')}
   <div class="body"><div class="pad stack" style="gap:10px">
     <div class="card" style="padding:12px 15px;display:flex;gap:18px;flex-wrap:wrap;align-items:center">
-      <div><div class="tiny">ระยะกล้องถึงจุดศูนย์กลาง</div><b class="num" style="font-size:15px">${(+e.station.dist).toFixed(4)} m.</b></div>
-      ${e.type==='shotput'?`<div><div class="tiny">เส้นผ่านศูนย์กลางวง</div><b class="num" style="font-size:15px">${(+e.station.dia).toFixed(2)} m.</b></div>`:''}
+      <div><div class="tiny">ระยะกล้องถึงจุดศูนย์กลาง</div><b class="num" style="font-size:15px${needStation(e)&&!(+e.station.dist>0)?';color:var(--bad)':''}">${(+e.station.dist).toFixed(4)} m.</b></div>
+      ${e.type==='shotput'?`<div><div class="tiny">เส้นผ่านศูนย์กลางวง</div><b class="num" style="font-size:15px">${(+e.station.dia).toFixed(3)} m.</b></div>`:''}
       <button class="mini" data-go="settings" style="margin-inline-start:auto">ตั้งค่ารายการนี้</button>
     </div>
+    ${needStation(e)&&!(+e.station.dist>0)?`<div class="banner">รายการนี้ยังไม่ได้ตั้งค่า <b>ระยะกล้อง→จุดศูนย์กลางวง (S)</b> ผลที่คำนวณจะต่ำกว่าความจริง กรุณากด “ตั้งค่ารายการนี้” แล้วกรอกค่าก่อนบันทึกผล</div>`:''}
     <p class="eyebrow" style="margin:6px 0 0">รายชื่อนักกีฬา · แตะเพื่อบันทึกผล</p>
     ${(e.athletes||[]).map((a,i)=>{
       const r=st.rows[i];
@@ -570,24 +585,55 @@ function scEventForm(){
     <div class="card" style="padding:15px">
       <div class="eyebrow">ค่ากล้องและสนาม</div>
       <div class="fields" style="grid-template-columns:1fr 1fr;margin-top:12px">
-        <div class="f"><label>ระยะกล้อง→จุดศูนย์กลาง (m.)</label><input id="evDist" inputmode="decimal" value="${e?(+e.station.dist).toFixed(4):''}" placeholder="0.0000"></div>
-        <div class="f"><label>เส้นผ่านศูนย์กลางวง (m.)</label><input id="evDia" inputmode="decimal" value="${e?(+e.station.dia||0).toFixed(2):'2.14'}" placeholder="2.14"></div>
+        <div class="f"><label>ระยะกล้อง→จุดศูนย์กลาง (m.) <span style="color:var(--bad)">*</span></label><input id="evDist" inputmode="decimal" value="${e?(+e.station.dist).toFixed(4):''}" placeholder="เช่น 5.9018"></div>
+        <div class="f"><label>เส้นผ่านศูนย์กลางวง (m.) <span style="color:var(--bad)">*</span></label><input id="evDia" inputmode="decimal" value="${e?(+e.station.dia||0).toFixed(3):'2.135'}" placeholder="2.135"></div>
       </div>
+      ${e&&needStation(e)&&!(+e.station.dist>0)?`<div class="banner" style="margin-top:11px">รายการนี้ยัง <b>ไม่ได้ตั้งค่าระยะกล้อง (S = 0)</b> ผลที่บันทึกไปแล้วจะคำนวณผิด กรุณากรอกค่าจริงแล้วกดบันทึก — ระบบจะคำนวณผลทุกครั้งใหม่ให้อัตโนมัติ</div>`:''}
       <div class="fields" style="grid-template-columns:1fr 1fr;margin-top:10px">
         <div class="f"><label>จำนวนครั้ง</label><input id="evRounds" inputmode="numeric" value="${e?e.rounds||6:6}"></div>
         <div class="f"><label>ผ่านเข้ารอบชิง (คน)</label><input id="evQual" inputmode="numeric" value="${e?e.qualify||8:8}"></div>
       </div>
       <div class="f txt" style="margin-top:12px"><label for="evJudge">กรรมการผู้บันทึกผล</label><input id="evJudge" value="${esc(e?e.judge||'':S.judge)}"></div>
-      <p class="tiny" style="margin:11px 0 0">ตั้งกล้องให้เป็นระนาบเดียวกับแนวกระดานเหยียบ/วงทุ่ม · เส้นผ่านศูนย์กลางวงใช้เฉพาะประเภททุ่ม–ขว้าง</p>
+      <p class="tiny" style="margin:11px 0 0">ตั้งกล้องให้เป็นระนาบเดียวกับแนวกระดานเหยียบ/วงทุ่ม · ช่องที่มี <span style="color:var(--bad)">*</span> <b>จำเป็นสำหรับประเภททุ่ม–ขว้าง</b> ถ้าเว้นว่างระบบจะไม่ให้บันทึก เพราะสูตรกฎโคไซน์ต้องใช้ทั้งสองค่า · วงทุ่มน้ำหนัก 2.135 m · วงขว้างจักร 2.50 m · พุ่งแหลนส่วนโค้ง 8.00 m<br>ประเภทกระโดดไกลไม่ใช้สองค่านี้ในการคำนวณ (เก็บไว้อ้างอิงเท่านั้น)</p>
     </div>
     ${e?`<div class="card" style="padding:15px">
       <div class="eyebrow" style="margin-bottom:7px">แยกรุ่น / เพศ</div>
       <p class="tiny" style="margin:0 0 11px">สร้างรายการใหม่ที่ใช้วิธีคำนวณและค่ากล้องชุดเดียวกับรายการนี้ แต่รายชื่อนักกีฬาว่าง เหมาะกับการแยก ชาย/หญิง หรือแยกรุ่นอายุ</p>
       <button class="btn line" data-act="dupev">${ICON.copy} สร้างสำเนารายการนี้</button>
     </div>
-    <button class="btn danger" data-act="delev">ลบรายการนี้ทั้งหมด</button>`:''}
+    <button class="btn danger" data-delev="${e.id}">${ICON.trash} ลบรายการนี้ทั้งหมด</button>`:''}
   </div></div>
   <div class="foot"><button class="btn primary" data-act="${e?'evsave':'evcreate'}">${e?'บันทึกการตั้งค่า':'สร้างรายการ'}</button></div>`;
+}
+function scDelEvent(){
+  const e=DATA.events.find(x=>x.id===S.delId);
+  if(!e) return scEvents();
+  const ath=e.athletes||[];
+  const marks=ath.reduce((n,a)=>n+(a.attempts||[]).filter(Boolean).length,0);
+  const typed=(S.delText||'').trim();
+  const ok=typed===e.name.trim();
+  return `${hdr('ลบรายการแข่งขัน','การลบนี้กู้คืนไม่ได้','events')}
+  <div class="body"><div class="pad stack" style="gap:13px;max-width:560px">
+    <div class="card" style="padding:16px;border-color:color-mix(in srgb,var(--bad) 35%,transparent)">
+      <div class="eyebrow" style="color:var(--bad)">กำลังจะลบถาวร</div>
+      <b style="font-family:var(--display);font-size:19px;font-weight:600;display:block;margin-top:8px;line-height:1.3">${esc(e.name)}</b>
+      <span class="tiny">${esc(e.cat||'')}${e.field?' · '+esc(e.field):''}</span>
+      <div class="fields" style="grid-template-columns:1fr 1fr;margin-top:14px">
+        <div><div class="tiny">นักกีฬาที่จะหายไป</div><b class="num" style="font-size:17px">${ath.length} คน</b></div>
+        <div><div class="tiny">ผลที่บันทึกไว้</div><b class="num" style="font-size:17px">${marks} ครั้ง</b></div>
+      </div>
+    </div>
+    <div class="banner">ข้อมูลทั้งหมดของรายการนี้จะถูกลบออกจากฐานข้อมูลถาวร <b>กู้คืนไม่ได้</b> และจะหายไปจากหน้าจอผู้ชมทุกเครื่องทันที<br>ถ้าเพียงต้องการหยุดใช้ชั่วคราว ให้กดย้อนกลับแล้วปล่อยรายการไว้เฉย ๆ ได้</div>
+    <div class="card" style="padding:15px">
+      <div class="f txt"><label for="delText">พิมพ์ชื่อรายการให้ตรงเพื่อยืนยัน</label>
+        <input id="delText" value="${esc(S.delText||'')}" placeholder="${esc(e.name)}" autocomplete="off" spellcheck="false"></div>
+      <p class="tiny" style="margin:9px 0 0">ต้องพิมพ์ว่า <b>${esc(e.name)}</b> ${ok?'<span style="color:var(--good)">· ตรงแล้ว</span>':''}</p>
+    </div>
+  </div></div>
+  <div class="foot">
+    <button class="btn line" style="flex:0 0 40%" data-go="events">ยกเลิก</button>
+    <button class="btn danger" data-act="delevgo" ${ok?'':'disabled style="opacity:.45"'}>${ICON.trash} ลบถาวร</button>
+  </div>`;
 }
 function scMeetForm(){
   return `${hdr('ตั้งค่าการแข่งขัน','ชื่องาน สถานที่ และรหัสกรรมการ','events')}
@@ -867,7 +913,7 @@ function scViewerLive(){
 function render(){
   const map={boot:scBoot,home:scHome,login:scLogin,events:scEvents,roster:scRoster,record:scRecord,
     athform:scAthForm,evform:scEventForm,'settings':()=>{S.editing='event';return scEventForm()},
-    'settings-meet':scMeetForm,summary:()=>scSummary(false),import:scImport,
+    'settings-meet':scMeetForm,summary:()=>scSummary(false),import:scImport,delev:scDelEvent,
     'v-events':scViewerEvents,'v-live':scViewerLive,'v-summary':()=>scSummary(true)};
   try{ app.innerHTML=(map[S.screen]||scHome)(); }
   catch(err){ app.innerHTML=`${hdr('เกิดข้อผิดพลาด','','home')}<div class="body"><div class="pad"><div class="banner">${esc(err.message||err)}</div></div></div>`; }
@@ -875,7 +921,7 @@ function render(){
 
 /* ===================== การโต้ตอบ ===================== */
 app.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-go],[data-ev],[data-vev],[data-ath],[data-att],[data-mode],[data-pin],[data-act],[data-nav]');
+  const t=e.target.closest('[data-go],[data-delev],[data-ev],[data-vev],[data-ath],[data-att],[data-mode],[data-pin],[data-act],[data-nav]');
   if(!t) return;
   if(t.dataset.nav){ const n=S.athIdx+(+t.dataset.nav); if(n>=0&&n<ev().athletes.length){S.athIdx=n;S.attIdx=nextOpen();} return go('record'); }
   if(t.dataset.go){
@@ -886,6 +932,7 @@ app.addEventListener('click',async e=>{
     if(g==='settings'){S.editing='event';}
     return go(g);
   }
+  if(t.dataset.delev){ S.delId=t.dataset.delev; S.delText=''; return go('delev'); }
   if(t.dataset.ev){S.evId=t.dataset.ev;S.editing=null;return go('roster');}
   if(t.dataset.vev){S.evId=t.dataset.vev;return go('v-live');}
   if(t.dataset.ath!=null){S.athIdx=+t.dataset.ath;S.attIdx=nextOpen();S.mode='edm';return go('record');}
@@ -922,7 +969,7 @@ app.addEventListener('click',async e=>{
   if(a==='delath') return delAthlete();
   if(a==='evcreate') return createEvent();
   if(a==='evsave') return saveEvent();
-  if(a==='delev') return delEvent();
+  if(a==='delevgo') return delEvent();
   if(a==='meetsave') return saveMeet();
   if(a==='foul'||a==='unfoul'||a==='saveatt') return saveAttempt(a);
 });
@@ -937,6 +984,13 @@ app.addEventListener('change',e=>{
 });
 app.addEventListener('input',e=>{
   if(e.target.id==='impPaste'){ S.importText=e.target.value; return; }
+  if(e.target.id==='delText'){
+    S.delText=e.target.value;
+    const evx=DATA.events.find(x=>x.id===S.delId);
+    const btn=app.querySelector('[data-act="delevgo"]');
+    if(btn&&evx){ const ok=S.delText.trim()===evx.name.trim(); btn.disabled=!ok; btn.style.opacity=ok?'':'.45'; }
+    return;
+  }
   if(!['fd','fm','fs','fdist','fval'].includes(e.target.id)) return;
   const g=id=>document.getElementById(id)?.value;
   const a=ath(), key=`${a.id}:${S.attIdx}`, e2=ev();
@@ -1009,28 +1063,50 @@ function evBody(){
     rounds:Math.max(1,Math.min(8,+gv('evRounds')||6)), qualify:Math.max(1,+gv('evQual')||8),
     station:{dist:+gv('evDist')||0, dia:+gv('evDia')||0}, updatedAt:stamp()};
 }
+/* ตรวจค่ากล้องก่อนบันทึก — ประเภททุ่ม–ขว้างต้องมี S > 0 และ Ø > 0
+   ถ้าปล่อยให้ว่าง สูตรจะกลายเป็น (ระยะยิง − Ø/2) ซึ่งผิดจากไฟล์ Excel */
+function checkStation(type){
+  if(type==='longjump') return true;
+  const s=+gv('evDist')||0, dia=+gv('evDia')||0;
+  const bad = s>0 ? (dia>0?null:'evDia') : 'evDist';
+  if(!bad) return true;
+  const el=document.getElementById(bad);
+  if(el){ el.style.borderColor='var(--bad)'; el.focus(); el.scrollIntoView({block:'center',behavior:'smooth'}); }
+  toast(bad==='evDist'
+    ? 'กรุณากรอก “ระยะกล้อง→จุดศูนย์กลาง” ประเภททุ่ม–ขว้างขาดค่านี้ไม่ได้'
+    : 'กรุณากรอก “เส้นผ่านศูนย์กลางวง” เช่น ทุ่มน้ำหนัก 2.135');
+  return false;
+}
 async function createEvent(){
   if(!gv('evName')) return toast('กรุณากรอกชื่อรายการ');
+  const type=document.getElementById('evType').value;
+  if(!checkStation(type)) return;
   const id='e'+Date.now().toString(36);
-  const body={...evBody(), type:document.getElementById('evType').value, order:DATA.events.length+1};
+  const body={...evBody(), type, order:DATA.events.length+1};
   if(!await save('events/'+id,body)) return;
   S.evId=id; toast('สร้างรายการแล้ว'); go('roster');
 }
 async function saveEvent(){
   const e=ev();
+  if(!checkStation(e.type)) return;
   if(!await save('events/'+e.id, evBody(), true)) return;
   toast('บันทึกการตั้งค่าแล้ว'); S.editing=null; go('roster');
 }
 async function delEvent(){
-  const e=ev();
+  const e=DATA.events.find(x=>x.id===S.delId);
+  if(!e) return go('events');
+  if((S.delText||'').trim()!==e.name.trim()) return toast('พิมพ์ชื่อรายการยังไม่ตรง');
   if(!DATA.db) return toast('ยังไม่ได้เชื่อมฐานข้อมูล');
+  toast('กำลังลบ…');
   try{
     for(const a of (e.athletes||[])) await DATA.db.doc(`events/${e.id}/athletes/${a.id}`).delete();
     await DATA.db.doc('events/'+e.id).delete();
-  }catch(err){ return toast('ลบไม่สำเร็จ'); }
+  }catch(err){ return toast('ลบไม่สำเร็จ — ลองใหม่อีกครั้ง'); }
   subs.get(e.id)?.(); subs.delete(e.id);
-  DATA.events=DATA.events.filter(x=>x.id!==e.id); S.evId=null;
-  toast('ลบรายการแล้ว'); go('events');
+  DATA.events=DATA.events.filter(x=>x.id!==e.id);
+  if(S.evId===e.id) S.evId=null;
+  S.delId=null; S.delText='';
+  toast('ลบ “'+e.name+'” แล้ว'); go('events');
 }
 async function saveMeet(){
   const ok1=await save('meta/meet',{name:gv('mName')||'การแข่งขันกรีฑา',where:gv('mWhere'),date:gv('mDate')});
