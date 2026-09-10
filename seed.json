@@ -1,0 +1,601 @@
+{
+ "meta/meet": {
+  "name": "การแข่งขันกรีฑา",
+  "where": "",
+  "date": ""
+ },
+ "meta/config": {
+  "pin": "2569",
+  "judges": [
+   "กรรมการภาคสนาม"
+  ]
+ },
+ "events/longjump": {
+  "name": "กระโดดไกล",
+  "cat": "",
+  "type": "longjump",
+  "field": "บ่อทราย",
+  "judge": "",
+  "rounds": 6,
+  "qualify": 8,
+  "order": 1,
+  "station": {
+   "dist": 5.9918,
+   "dia": 0
+  },
+  "source": "กระโดดไกล_สรุปผล_v2.xlsx"
+ },
+ "events/shotput": {
+  "name": "ทุ่มน้ำหนัก",
+  "cat": "",
+  "type": "shotput",
+  "field": "วงทุ่ม",
+  "judge": "",
+  "rounds": 6,
+  "qualify": 8,
+  "order": 2,
+  "station": {
+   "dist": 5.9018,
+   "dia": 2.14
+  },
+  "source": "ทุ่มน้ำหนัก.xlsx"
+ },
+ "events/longjump/athletes/a01": {
+  "order": 1,
+  "no": "D1042",
+  "name": "สมชาย ใจดี",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 27,
+    "m": 24,
+    "s": 6,
+    "dist": 6.9528
+   },
+   {
+    "mode": "edm",
+    "d": 27,
+    "m": 17,
+    "s": 38,
+    "dist": 6.8953
+   },
+   {
+    "mode": "edm",
+    "d": 28,
+    "m": 36,
+    "s": 59,
+    "dist": 6.9694
+   },
+   null,
+   {
+    "mode": "edm",
+    "d": 32,
+    "m": 19,
+    "s": 20,
+    "dist": 6.7549
+   },
+   null
+  ]
+ },
+ "events/longjump/athletes/a02": {
+  "order": 2,
+  "no": "D2317",
+  "name": "ปิยะพงษ์ ศรีสุข",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 30,
+    "m": 16,
+    "s": 11,
+    "dist": 6.8226
+   },
+   {
+    "mode": "edm",
+    "d": 31,
+    "m": 57,
+    "s": 20,
+    "dist": 7.398
+   },
+   {
+    "mode": "edm",
+    "d": 32,
+    "m": 31,
+    "s": 48,
+    "dist": 7.1918
+   },
+   {
+    "mode": "edm",
+    "d": 32,
+    "m": 3,
+    "s": 24,
+    "dist": 7.5125
+   },
+   null,
+   null
+  ]
+ },
+ "events/longjump/athletes/a03": {
+  "order": 3,
+  "no": "D3580",
+  "name": "ณัฐวุฒิ แก้วมณี",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 20,
+    "m": 50,
+    "s": 12,
+    "dist": 6.167
+   },
+   null,
+   {
+    "mode": "edm",
+    "d": 24,
+    "m": 22,
+    "s": 41,
+    "dist": 6.7445
+   },
+   {
+    "mode": "edm",
+    "d": 21,
+    "m": 35,
+    "s": 19,
+    "dist": 6.7995
+   },
+   {
+    "mode": "edm",
+    "d": 22,
+    "m": 42,
+    "s": 33,
+    "dist": 6.4222
+   },
+   null
+  ]
+ },
+ "events/longjump/athletes/a04": {
+  "order": 4,
+  "no": "D4726",
+  "name": "ธนกฤต บุญมาก",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 21,
+    "m": 0,
+    "s": 14,
+    "dist": 6.5504
+   },
+   null,
+   {
+    "mode": "edm",
+    "d": 20,
+    "m": 39,
+    "s": 16,
+    "dist": 6.2566
+   },
+   {
+    "mode": "edm",
+    "d": 24,
+    "m": 52,
+    "s": 23,
+    "dist": 6.3531
+   },
+   {
+    "mode": "edm",
+    "d": 24,
+    "m": 31,
+    "s": 3,
+    "dist": 6.5655
+   },
+   null
+  ]
+ },
+ "events/longjump/athletes/a05": {
+  "order": 5,
+  "no": "D5163",
+  "name": "กิตติศักดิ์ พรมงคล",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 25,
+    "m": 42,
+    "s": 14,
+    "dist": 6.6634
+   },
+   {
+    "mode": "edm",
+    "d": 24,
+    "m": 23,
+    "s": 50,
+    "dist": 6.748
+   },
+   {
+    "mode": "edm",
+    "d": 26,
+    "m": 10,
+    "s": 32,
+    "dist": 6.8955
+   },
+   {
+    "mode": "edm",
+    "d": 28,
+    "m": 25,
+    "s": 5,
+    "dist": 7.0982
+   },
+   {
+    "mode": "edm",
+    "d": 28,
+    "m": 50,
+    "s": 26,
+    "dist": 6.8762
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a01": {
+  "order": 1,
+  "no": "D1024",
+  "name": "หนี่ง",
+  "team": "",
+  "attempts": [
+   null,
+   {
+    "mode": "edm",
+    "d": 84,
+    "m": 28,
+    "s": 51,
+    "dist": 10.2477
+   },
+   {
+    "mode": "edm",
+    "d": 93,
+    "m": 45,
+    "s": 44,
+    "dist": 9.6572
+   },
+   {
+    "mode": "edm",
+    "d": 92,
+    "m": 41,
+    "s": 24,
+    "dist": 9.6796
+   },
+   {
+    "mode": "edm",
+    "d": 87,
+    "m": 15,
+    "s": 57,
+    "dist": 10.2178
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a02": {
+  "order": 2,
+  "no": "D1137",
+  "name": "สอง",
+  "team": "",
+  "attempts": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ },
+ "events/shotput/athletes/a03": {
+  "order": 3,
+  "no": "D1245",
+  "name": "สาม",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 77,
+    "m": 30,
+    "s": 4,
+    "dist": 8.9486
+   },
+   {
+    "mode": "edm",
+    "d": 86,
+    "m": 46,
+    "s": 45,
+    "dist": 8.0584
+   },
+   {
+    "mode": "edm",
+    "d": 83,
+    "m": 58,
+    "s": 26,
+    "dist": 8.7544
+   },
+   {
+    "mode": "edm",
+    "d": 94,
+    "m": 54,
+    "s": 34,
+    "dist": 7.9922
+   },
+   {
+    "mode": "edm",
+    "d": 79,
+    "m": 40,
+    "s": 34,
+    "dist": 9.0355
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a04": {
+  "order": 4,
+  "no": "D1308",
+  "name": "สี่",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 69,
+    "m": 24,
+    "s": 17,
+    "dist": 9.5854
+   },
+   {
+    "mode": "edm",
+    "d": 79,
+    "m": 25,
+    "s": 54,
+    "dist": 8.0915
+   },
+   {
+    "mode": "edm",
+    "d": 73,
+    "m": 6,
+    "s": 55,
+    "dist": 8.5042
+   },
+   {
+    "mode": "edm",
+    "d": 70,
+    "m": 26,
+    "s": 19,
+    "dist": 9.4363
+   },
+   {
+    "mode": "edm",
+    "d": 83,
+    "m": 24,
+    "s": 4,
+    "dist": 8.3285
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a05": {
+  "order": 5,
+  "no": "D1416",
+  "name": "ห้า",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 79,
+    "m": 17,
+    "s": 26,
+    "dist": 7.9008
+   },
+   {
+    "mode": "edm",
+    "d": 73,
+    "m": 48,
+    "s": 34,
+    "dist": 8.508
+   },
+   {
+    "mode": "edm",
+    "d": 79,
+    "m": 0,
+    "s": 57,
+    "dist": 8.1671
+   },
+   {
+    "mode": "edm",
+    "d": 71,
+    "m": 34,
+    "s": 15,
+    "dist": 9.1699
+   },
+   {
+    "mode": "edm",
+    "d": 83,
+    "m": 20,
+    "s": 56,
+    "dist": 8.1966
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a06": {
+  "order": 6,
+  "no": "D1523",
+  "name": "หก",
+  "team": "",
+  "attempts": [
+   null,
+   {
+    "mode": "edm",
+    "d": 79,
+    "m": 28,
+    "s": 52,
+    "dist": 7.2539
+   },
+   {
+    "mode": "edm",
+    "d": 70,
+    "m": 48,
+    "s": 16,
+    "dist": 7.7471
+   },
+   {
+    "mode": "edm",
+    "d": 72,
+    "m": 56,
+    "s": 36,
+    "dist": 8.2573
+   },
+   {
+    "mode": "edm",
+    "d": 79,
+    "m": 6,
+    "s": 46,
+    "dist": 7.3969
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a07": {
+  "order": 7,
+  "no": "D1671",
+  "name": "เจ็ด",
+  "team": "",
+  "attempts": [
+   null,
+   {
+    "mode": "edm",
+    "d": 76,
+    "m": 52,
+    "s": 50,
+    "dist": 6.7874
+   },
+   {
+    "mode": "edm",
+    "d": 70,
+    "m": 51,
+    "s": 8,
+    "dist": 8.2569
+   },
+   null,
+   null,
+   null
+  ]
+ },
+ "events/shotput/athletes/a08": {
+  "order": 8,
+  "no": "D1782",
+  "name": "แปด",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 78,
+    "m": 14,
+    "s": 17,
+    "dist": 8.7166
+   },
+   null,
+   null,
+   {
+    "mode": "edm",
+    "d": 71,
+    "m": 30,
+    "s": 55,
+    "dist": 9.4999
+   },
+   {
+    "mode": "edm",
+    "d": 76,
+    "m": 59,
+    "s": 42,
+    "dist": 7.6013
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a09": {
+  "order": 9,
+  "no": "D1859",
+  "name": "เก้า",
+  "team": "",
+  "attempts": [
+   {
+    "mode": "edm",
+    "d": 75,
+    "m": 39,
+    "s": 7,
+    "dist": 8.682
+   },
+   {
+    "mode": "edm",
+    "d": 76,
+    "m": 47,
+    "s": 41,
+    "dist": 8.9561
+   },
+   {
+    "mode": "edm",
+    "d": 76,
+    "m": 28,
+    "s": 42,
+    "dist": 8.4912
+   },
+   {
+    "mode": "edm",
+    "d": 72,
+    "m": 13,
+    "s": 19,
+    "dist": 8.6182
+   },
+   {
+    "mode": "edm",
+    "d": 73,
+    "m": 17,
+    "s": 36,
+    "dist": 8.2135
+   },
+   null
+  ]
+ },
+ "events/shotput/athletes/a10": {
+  "order": 10,
+  "no": "D1934",
+  "name": "สิบ",
+  "team": "",
+  "attempts": [
+   null,
+   {
+    "mode": "edm",
+    "d": 79,
+    "m": 58,
+    "s": 43,
+    "dist": 7.7195
+   },
+   {
+    "mode": "edm",
+    "d": 72,
+    "m": 41,
+    "s": 14,
+    "dist": 8.1446
+   },
+   {
+    "mode": "edm",
+    "d": 65,
+    "m": 7,
+    "s": 53,
+    "dist": 8.6805
+   },
+   {
+    "mode": "edm",
+    "d": 68,
+    "m": 51,
+    "s": 34,
+    "dist": 7.0746
+   },
+   null
+  ]
+ }
+}
